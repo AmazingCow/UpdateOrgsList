@@ -45,6 +45,7 @@ import os;
 import os.path;
 import urllib;
 import json;
+import time;
 
 
 ################################################################################
@@ -100,6 +101,7 @@ def build_bullet_item_for_org(org_name):
 ################################################################################
 ## Script                                                                     ##
 ################################################################################
+## Update
 repos_info     = fetch_list_repos(THIS_ORGANIZATION);
 template_lines = open("template.md").readlines();
 
@@ -132,5 +134,15 @@ for line in template_lines:
 readme_file.close();
 print "Done...";
 
+## Commit
+GIT_ADD    = "git add README.md"
+GIT_COMMIT = "git commit -m \"[UpdateOrgsList] {0}\"".format(time.asctime())
+GIT_PUSH   = "git push origin master";
 
-
+os.chdir("..");
+os.system(
+    "{0} && {1} && {2}".format(
+    GIT_ADD,
+    GIT_COMMIT,
+    GIT_PUSH
+));
