@@ -46,7 +46,7 @@ if [ -z "$START_PATH" ]; then
 fi;
 
 
-FOLDERS=$(find . -maxdepth 1 -iname "*-List");
+FOLDERS=$(find $START_PATH -maxdepth 1 -iname "*-List");
 if [ -z "$FOLDERS" ]; then
     echo "Seems that you aren't running in the Amazing Cow folder...";
     exit 1;
