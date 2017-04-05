@@ -56,6 +56,8 @@ fi;
 for FOLDER in $FOLDERS; do
     echo "Updating $FOLDER";
     cd $FOLDER/UpdateOrgsList
+    git pull origin master;
+
     echo $PWD
     ./update.py
 
