@@ -128,7 +128,6 @@ for line in template_lines:
         for org_name in ORGANIZATION_NAMES:
             line += build_bullet_item_for_org(org_name);
 
-    print line;
     readme_file.write(line + "\n");
 
 readme_file.close();
