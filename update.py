@@ -146,6 +146,6 @@ os.system(
 ));
 
 os.system(
-    "{0}".format(GIT_PUSH);
+    "{0}".format(GIT_PUSH)
 ));
 
