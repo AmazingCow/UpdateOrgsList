@@ -140,8 +140,12 @@ GIT_PUSH   = "git push origin master";
 
 os.chdir("..");
 os.system(
-    "{0} && {1} && {2}".format(
+    "{0} && {1}".format(
     GIT_ADD,
     GIT_COMMIT,
-    GIT_PUSH
 ));
+
+os.system(
+    "{0}".format(GIT_PUSH);
+));
+
