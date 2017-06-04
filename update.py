@@ -40,39 +40,37 @@
 ##                                  Enjoy :)                                  ##
 ##----------------------------------------------------------------------------##
 
-## Imports ##
+################################################################################
+## Imports                                                                    ##
+################################################################################
 import os;
 import os.path;
 import urllib;
 import json;
 import time;
-
+import sys;
 
 ################################################################################
 ## Vars                                                                       ##
 ################################################################################
-BASE_URL = "https://api.github.com/users/{ORGANIZATION_NAME}/repos"
+kBase_Url = "https://api.github.com/users/{ORGANIZATION_NAME}/repos"
 
-ORGANIZATION_NAMES = [
+kOrganization_Names = [
     "AmazingCow-Game-Core",
     "AmazingCow-Game-Framework",
     "AmazingCow-Game-Tool",
     "AmazingCow-Game",
     "AmazingCow-Libs",
     "AmazingCow-Tools",
-    "AmazingCow-Imidiar",
+    ## "AmazingCow-Imidiar",
 ];
-
-THIS_ORGANIZATION="AmazingCow-{0}".format(
-    os.path.basename(os.path.abspath("../")).replace("-List", "")
-);
 
 
 ################################################################################
 ## Functions                                                                  ##
 ################################################################################
-def fetch_list_repos(organization_name):
-    url      = BASE_URL.format(ORGANIZATION_NAME=organization_name);
+def fetch_repos(organization_name):
+    url      = kBase_Url.format(ORGANIZATION_NAME=organization_name);
     response = urllib.urlopen(url);
     data     = json.loads(response.read());
 
@@ -85,8 +83,31 @@ def fetch_list_repos(organization_name):
             "url"  : info["clone_url"]
         });
 
+    print "Done... Found ({0}) repos.".format(len(repos));
     return repos;
 
+def commit_changes(org_list_path):
+    cwd = os.getcwd();
+
+    os.chdir(org_list_path);
+    print "CWD: ", os.getcwd();
+
+    add_cmd    = "git add README.md";
+    commit_cmd = "git commit -m \"- [UpdateOrgsList] Time: {0}\"".format(
+        time.asctime(time.localtime())
+    );
+    push_cmd = "git push origin master";
+
+    os.system("git status");
+    os.system(add_cmd   );
+    os.system(commit_cmd);
+    os.system(push_cmd  );
+
+    os.chdir(cwd);
+
+def build_list_repo_name_for_org(org_name):
+    ## AmazingCow-Game-Core -> Game-Core-List
+    return org_name.replace("AmazingCow-", "") + "-List";
 
 def build_url_for_org(org_name):
     return "https://github.com/{0}".format(org_name);
@@ -97,55 +118,67 @@ def build_bullet_item_for_repo(repo_info):
 def build_bullet_item_for_org(org_name):
     return "* [{0}]({1})\n".format(org_name, build_url_for_org(org_name));
 
+def canonize_path(path):
+    return os.path.abspath(os.path.expanduser(path));
+
+def replace_template(org_name, repos_info):
+    template_lines = open("template.md").readlines();
+    replaced_lines = [];
+
+    for line in template_lines:
+        line = line.replace("\n", "");
+
+        if("__ORGANIZATION_NAME__" in line):
+            line = line.replace("__ORGANIZATION_NAME__", org_name);
+
+        if("__ORGANIZATION_URL__" in line):
+            line = line.replace("__ORGANIZATION_URL__", build_url_for_org(org_name));
+
+        if("__REPOS_LIST__" in line):
+            line = "";
+            for repo_info in repos_info:
+                line += build_bullet_item_for_repo(repo_info);
+
+        if("__ALL_ORGANIZATIONS__" in line):
+            line = "";
+            for name in kOrganization_Names:
+                line += build_bullet_item_for_org(name);
+
+        replaced_lines.append(line);
+
+    return "\n".join(replaced_lines);
+
 
 ################################################################################
 ## Script                                                                     ##
 ################################################################################
-## Update
-repos_info     = fetch_list_repos(THIS_ORGANIZATION);
-template_lines = open("template.md").readlines();
+def main():
+    base_path = canonize_path(sys.argv[1]);
+    print "Base Path:", base_path;
 
-readme_file = open("../README.md", "w");
+    ## Iterate all AmazingCow organizations and build
+    ## the organization README list.
+    for org_name in kOrganization_Names:
+        org_list_name = build_list_repo_name_for_org(org_name);
+        org_list_path = os.path.join(base_path, org_list_name);
 
-for line in template_lines:
-    line = line.replace("\n", "");
-    if("__ORGANIZATION_NAME__" in line):
-        line = line.replace("__ORGANIZATION_NAME__", THIS_ORGANIZATION);
+        print "Org Name      :", org_name;
+        print "Org List Name :", org_list_name;
+        print "Org List Path :", org_list_path;
 
-    if("__ORGANIZATION_URL__" in line):
-        line = line.replace(
-            "__ORGANIZATION_URL__",
-            build_url_for_org(THIS_ORGANIZATION)
-        );
+        ## Get the repos from github and build the README.md contents.
+        repos         = fetch_repos(org_name);
+        replaced_text = replace_template(org_name, repos);
 
-    if("__REPOS_LIST__" in line):
-        line = "";
-        for repo_info in repos_info:
-            line += build_bullet_item_for_repo(repo_info);
+        ## Write the README.md.
+        readme_fullpath = os.path.join(org_list_path, "README.md");
+        readme_file     = open(readme_fullpath, "w");
 
-    if("__ALL_ORGANIZATIONS__" in line):
-        line = "";
-        for org_name in ORGANIZATION_NAMES:
-            line += build_bullet_item_for_org(org_name);
+        readme_file.write(replaced_text);
+        readme_file.close();
 
-    readme_file.write(line + "\n");
+        ## Commit
+        commit_changes(org_list_path);
 
-readme_file.close();
-print "Done...";
-
-## Commit
-GIT_ADD    = "git add README.md"
-GIT_COMMIT = "git commit -m \"[UpdateOrgsList] {0}\"".format(time.asctime())
-GIT_PUSH   = "git push origin master";
-
-os.chdir("..");
-os.system(
-    "{0} && {1}".format(
-    GIT_ADD,
-    GIT_COMMIT,
-));
-
-os.system(
-    "{0}".format(GIT_PUSH)
-);
-
+if __name__ == '__main__':
+    main();
