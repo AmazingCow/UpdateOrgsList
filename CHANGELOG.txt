@@ -1,4 +1,14 @@
 ################################################################################
+## Version 2.x.x                                                              ##
+################################################################################
+Version 2.0.0 - Jun 04, 2017
+    - Update the update.py script to make it more robust and portable
+      now it should run OK, both in AmazingCow's host and any other
+      GNU/Linux box ;D
+    - Remove all the other files that aren't needed anymore.
+    - Update the README.md
+
+################################################################################
 ## Version 1.x.x                                                              ##
 ################################################################################
 Version 1.0.0 - Apr 5, 2016
