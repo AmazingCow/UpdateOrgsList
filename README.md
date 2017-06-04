@@ -18,3 +18,21 @@ of being updating them manually.
 We don't expect that it would be useful for anyone beside ourselves! :/
 
 But still, you are welcome to **hack** and **share** it freely!
+
+
+
+<!-- ####################################################################### -->
+<!-- ####################################################################### -->
+
+## License:
+
+This software is **proudly** released under [GPLv3](https://www.gnu.org/licenses/gpl-3.0.en.html).
+
+
+<!-- ####################################################################### -->
+<!-- ####################################################################### -->
+
+## Others:
+
+Check our repos and take a look at our 
+[open source site](http://opensource.amazingcow.com).
