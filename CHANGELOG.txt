@@ -1,6 +1,10 @@
 ################################################################################
 ## Version 2.x.x                                                              ##
 ################################################################################
+Version 2.1.0 - Jun 18, 2017
+    - Add the info about the Trello boards.
+
+--------------------------------------------------------------------------------
 Version 2.0.0 - Jun 04, 2017
     - Update the update.py script to make it more robust and portable
       now it should run OK, both in AmazingCow's host and any other
