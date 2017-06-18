@@ -24,6 +24,7 @@ Thank you and enjoy :D
 ## Info:
 
 #### Organization Page: [__ORGANIZATION_URL__](__ORGANIZATION_URL__)
+#### Trello Page: [__TRELLO_URL__](__TRELLO_URL__)
 
 #### List of Repos:
 

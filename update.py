@@ -50,6 +50,7 @@ import json;
 import time;
 import sys;
 
+
 ################################################################################
 ## Vars                                                                       ##
 ################################################################################
@@ -112,6 +113,10 @@ def build_list_repo_name_for_org(org_name):
 def build_url_for_org(org_name):
     return "https://github.com/{0}".format(org_name);
 
+def build_trello_url_for_org(org_name):
+    clean_name = org_name.lower().replace("-","");
+    return "https://trello.com/{0}".format(clean_name);
+
 def build_bullet_item_for_repo(repo_info):
     return "* [{0}]({1})\n".format(repo_info["name"], repo_info["url"]);
 
@@ -138,6 +143,9 @@ def replace_template(org_name, repos_info):
             line = "";
             for repo_info in repos_info:
                 line += build_bullet_item_for_repo(repo_info);
+
+        if("__TRELLO_URL__" in line):
+            line = line.replace("__TRELLO_URL__", build_trello_url_for_org(org_name));
 
         if("__ALL_ORGANIZATIONS__" in line):
             line = "";
