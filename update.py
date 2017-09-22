@@ -57,11 +57,12 @@ import sys;
 kBase_Url = "https://api.github.com/users/{ORGANIZATION_NAME}/repos"
 
 kOrganization_Names = [
+    "AmazingCow-Game",
     "AmazingCow-Game-Core",
     "AmazingCow-Game-Framework",
     "AmazingCow-Game-Tool",
-    "AmazingCow-Game",
     "AmazingCow-Libs",
+    "AmazingCow-Services",
     "AmazingCow-Tools",
     ## "AmazingCow-Imidiar",
 ];
